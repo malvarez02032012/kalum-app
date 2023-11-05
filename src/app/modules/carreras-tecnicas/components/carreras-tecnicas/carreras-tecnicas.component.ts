@@ -7,6 +7,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { FormCarreraTecnicaComponent } from './form-carrera-tecnica.component';
 import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
+import { iif } from 'rxjs';
 
 @Component({
   selector: 'app-carreras-tecnicas',
@@ -31,10 +32,24 @@ export class CarrerasTecnicasComponent implements OnInit {
   }
 
   getCarrerasTecnicas() {
-    const data = this.carreraTecnicaService.getCarreras().subscribe(data => {
-      this.processCarrerasTecnicasResponse(data); 
-    }); 
+    const data = this.carreraTecnicaService.getCarreras().subscribe({
+      next: response => {
+        this.processCarrerasTecnicasResponse(response);
+      },
+      error: err => {
+        console.log(err.status);
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Carreras Técnicas',
+          text: `No se pudo cargar las carreras, consulte al administrador: ${err.status !='0'? err.error.message: err.message}`,
+          footer: '<a href="">kalum v1.0.0</a>'
+        });
+      }
+    });
   }
+
+  isObjectEmpty(objectName: any) { return Object.keys(objectName).length === 0 && objectName.constructor === Object; }
 
   processCarrerasTecnicasResponse(data: any) {
     const dataCarreraTecnica: CarreraTecnica[] = [];
@@ -48,20 +63,17 @@ export class CarrerasTecnicasComponent implements OnInit {
     this.dataSource.paginator = this.paginador;
   }
 
-  openFormCarreraTecnica(){
-    const dialogRef = this.dialog.open(FormCarreraTecnicaComponent, {width:'450px'});
-    dialogRef.afterClosed().subscribe(result =>{
-      if (result == 1)
-      {
+  openFormCarreraTecnica() {
+    const dialogRef = this.dialog.open(FormCarreraTecnicaComponent, { width: '450px' });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == 1) {
         this.getCarrerasTecnicas();
       }
-      else
-      if (result == 2)
-      {
-        Swal.fire('Carreras Técnicas', 'Ups!!!, se genero un error al momento de crear el curso', 'error')
-      }
+      // else
+      //   if (result == 2) {
+      //     Swal.fire('Carreras Técnicas', 'Ups!!!, se genero un error al momento de crear el curso', 'error')
+      //   }
     }
-
     );
   }
 }
