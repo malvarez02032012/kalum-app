@@ -41,7 +41,7 @@ export class CarrerasTecnicasComponent implements OnInit {
 
         Swal.fire({
           icon: 'error',
-          title: 'Carreras Técnicas x',
+          title: 'Carreras Técnicas',
           text: `No se pudo cargar las carreras, consulte al administrador: ${err.status !='0'? err.error.message: err.message}`,
           footer: '<a href="">kalum v1.0.0</a>'
         });
