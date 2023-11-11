@@ -42,7 +42,7 @@ export class CarrerasTecnicasComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Carreras Técnicas',
-          text: `No se pudo cargar las carreras, consulte al administrador: ${err.status !='0'? err.error.message: err.message}`,
+          text: `No se pudo cargar las carreras, consulte al administrador: ${err.status != '0' ? err.error.message : err.message}`,
           footer: '<a href="">kalum v1.0.0</a>'
         });
       }
@@ -75,5 +75,51 @@ export class CarrerasTecnicasComponent implements OnInit {
       //   }
     }
     );
+  }
+
+  editFormCarreraTecnica(carreraId: string, nombre: string) {
+    const dialogRef = this.dialog.open(FormCarreraTecnicaComponent, { width: '450px', data: { carreraId, nombre } });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == 1) {
+        this.getCarrerasTecnicas();
+      }
+      else
+        if (result == 2) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Carreras Técnicas',
+            text: `Se actualizo correctamente la carrera: ${nombre}`,
+            footer: '<a href="">kalum v1.0.0</a>'
+          })
+        }
+    }
+    );
+  }
+
+  deleteCarreraTecnica(carreraId: string) {
+    Swal.fire({
+      title: 'Carrera Técnicas',
+      text: 'Está seguro de eliminar la carrera técnica?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'No',
+      reverseButtons: true,
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.carreraTecnicaService.deleteCarreraTecnica(carreraId).subscribe((data: any) => {
+          console.log(data);
+          
+          if (data.httpStatusCode && data.status == 400) {
+            Swal.fire('Carreras Técnicas', 'Hubo un error al momento de eliminar el registro', 'error');
+          } else {
+            Swal.fire('Carreras Técnicas', 'Registro eliminado', 'success');
+            this.getCarrerasTecnicas();
+          }
+        }//susbribe
+
+        )
+      }
+    });
   }
 }

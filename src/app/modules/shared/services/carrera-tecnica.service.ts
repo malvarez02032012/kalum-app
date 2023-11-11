@@ -18,23 +18,17 @@ export class CarreraTecnicaService {
     return this.http.get(`${BASE_URL}/carreras-tecnicas`);
   }
 
-  addCarreraTecnica(body:any)
-  {
-     return this.http.post(`${BASE_URL}/carreras-tecnicas`, body);
+  addCarreraTecnica(body: any) {
+    return this.http.post(`${BASE_URL}/carreras-tecnicas`, body);
   }
 
-  // addCarreraTecnica(body:any):Observable<HttpResponse<any>>
-  // {
-  //   return this.http.post<any>(`${BASE_URL}/carreras-tecnicas`, body, { observe: 'response' })
-  //   .pipe(catchError(this.handleError<any>('countries')));
-  // }
+  updateCarreraTecnica(body: any) {
+    return this.http.put(`${BASE_URL}/carreras-tecnicas/${body.carreraId}`, { Nombre: body.nombre });
+  }
 
-  // private handleError<T>(operation = 'operation') {
-  //   return (error: any): Observable<T> => {
-  //     console.log(`Error: ${error.message}`);
-  //     return of(error);
-  //   };
-  // }
+  deleteCarreraTecnica(carreraId: string) {
+    return this.http.delete(`${BASE_URL}/carreras-tecnicas/${carreraId}`);
+  }
 }
 
 
